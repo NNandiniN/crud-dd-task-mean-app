@@ -1,3 +1,4 @@
 module.exports = {
-  url: "mongodb://localhost:27017/dd_db"
+  url: "mongodb://mongo-container:27017/dd_db"
+
 };
