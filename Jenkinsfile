@@ -9,13 +9,15 @@ pipeline {
             }
         }
 
-        stage('Deploy Containers') {
+        stage('Deploy Cleanly') {
             steps {
                 sh '''
-                docker compose down || true
-                docker compose up -d
+                docker compose down --remove-orphans || true
+                docker system prune -f || true
+                docker compose up -d --force-recreate
                 '''
             }
         }
     }
 }
+
