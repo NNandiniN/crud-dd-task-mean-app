@@ -13,11 +13,20 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker compose down --remove-orphans || true
+                docker compose down --remove-orphans
                 docker compose pull
                 docker compose up -d
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment Successful!"
+        }
+        failure {
+            echo "❌ Deployment Failed!"
         }
     }
 }
