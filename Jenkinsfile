@@ -10,23 +10,12 @@ pipeline {
             }
         }
 
-        stage('Review') {
-            steps {
-                sh 'ls -la'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'docker compose build'
-            }
-        }
-
         stage('Deploy') {
             steps {
                 sh '''
                 docker compose down --remove-orphans || true
-                docker compose up -d --force-recreate
+                docker compose pull
+                docker compose up -d
                 '''
             }
         }
