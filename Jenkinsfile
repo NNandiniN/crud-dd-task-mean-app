@@ -1,22 +1,77 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSE_CMD = "docker compose"
+    }
+
     stages {
 
-        stage('Build Images') {
+        stage('Clone') {
             steps {
-                sh 'docker compose build'
+                echo "Cloning repository..."
+                git branch: 'main',
+                    url: 'https://github.com/NNandiniN/crud-dd-task-mean-app.git'
             }
         }
 
-        stage('Deploy Cleanly') {
+        stage('Review') {
             steps {
+                echo "Reviewing project structure..."
+                sh 'ls -la'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Installing dependencies and building frontend..."
+
                 sh '''
-                docker compose down --remove-orphans || true
-                docker system prune -f || true
-                docker compose up -d --force-recreate
+                cd backend
+                npm install
+
+                cd ../frontend
+                npm install
+                npm run build -- --configuration production
                 '''
             }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Running backend tests..."
+
+                sh '''
+                cd backend
+                npm test || true
+                '''
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo "Building Docker images..."
+                sh '${COMPOSE_CMD} build'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deploying containers..."
+                sh '''
+                ${COMPOSE_CMD} down --remove-orphans || true
+                ${COMPOSE_CMD} up -d --force-recreate
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment Successful!"
+        }
+        failure {
+            echo "❌ Pipeline Failed. Check logs."
         }
     }
 }
