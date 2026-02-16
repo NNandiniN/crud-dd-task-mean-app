@@ -12,7 +12,6 @@ services:
 
   backend:
     image: nandini9901/mean-backend:latest
-    container_name: backend-container
     ports:
       - "8080:8080"
     depends_on:
@@ -25,7 +24,6 @@ services:
 
   frontend:
     image: nandini9901/mean-frontend:latest
-    container_name: frontend-container
     ports:
       - "80:80"
     depends_on:
