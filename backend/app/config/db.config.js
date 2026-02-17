@@ -1,4 +1,4 @@
 module.exports = {
-  url: "mongodb://mongo-container:27017/dd_db"
-
+  url: process.env.MONGO_URL || "mongodb://mongo:27017/dd_db"
 };
+
