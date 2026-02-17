@@ -4,6 +4,7 @@ services:
 
   mongo:
     image: mongo:latest
+    container_name: mongo
     ports:
       - "27017:27017"
     restart: always
@@ -12,6 +13,7 @@ services:
 
   backend:
     image: nandini9901/mean-backend:latest
+    container_name: backend
     ports:
       - "8080:8080"
     depends_on:
@@ -20,10 +22,11 @@ services:
     networks:
       - mean-network
     environment:
-      - MONGO_URL=mongodb://mongo:27017/mean-db
+      - MONGO_URL=mongodb://mongo:27017/dd_db
 
   frontend:
     image: nandini9901/mean-frontend:latest
+    container_name: frontend
     ports:
       - "80:80"
     depends_on:
@@ -35,3 +38,4 @@ services:
 networks:
   mean-network:
     driver: bridge
+
